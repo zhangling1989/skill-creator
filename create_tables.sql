@@ -64,7 +64,7 @@ CREATE TABLE skills (
     file_hash VARCHAR(64) COMMENT '文件MD5/SHA256哈希值',
     version VARCHAR(32) DEFAULT '1.0.0' COMMENT '版本号',
     tags JSON COMMENT '标签数组',
-    metadata JSON COMMENT '其他元数据',
+    skill_metadata JSON COMMENT '其他元数据',
     price DECIMAL(10,2) DEFAULT 0.00 COMMENT 'Skill价格(元)',
     pricing_model VARCHAR(32) DEFAULT 'per_use' COMMENT '计费模式: free-免费, per_use-按次, subscription-订阅',
     view_count INT DEFAULT 0 COMMENT '浏览次数',

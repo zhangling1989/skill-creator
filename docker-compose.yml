@@ -11,7 +11,7 @@ services:
       MYSQL_USER: skillhub
       MYSQL_PASSWORD: skillhub123
     ports:
-      - "3306:3306"
+      - "3307:3306"  # 改为 3307 避免与本地 MySQL 冲突
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/create_tables.sql:/docker-entrypoint-initdb.d/init.sql
@@ -57,6 +57,10 @@ services:
       MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin123
+      MINIO_SECURE: "False"
+      MINIO_USE_HTTPS: "False"
+      DEFAULT_FILE_BUCKET: skill-hub
+      MINIO_BUCKET_NAME_SD: sd-generated-images
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: your-secret-key-change-in-production
     ports:

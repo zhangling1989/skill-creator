@@ -18,7 +18,7 @@ class Skill(Base):
     file_hash = Column(String(64), index=True)
     version = Column(String(32), default="1.0.0")
     tags = Column(JSON)
-    metadata = Column(JSON)
+    skill_metadata = Column(JSON)  # 重命名避免与 SQLAlchemy 的 metadata 冲突
     price = Column(DECIMAL(10, 2), default=0.00)
     pricing_model = Column(String(32), default="per_use")
     view_count = Column(Integer, default=0)

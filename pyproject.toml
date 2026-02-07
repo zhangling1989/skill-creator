@@ -1,0 +1,59 @@
+[project]
+name = "skill-hub"
+version = "1.0.0"
+description = "Skill Hub - 基于 MinIO 的 Skill 管理平台"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.109.0",
+    "uvicorn[standard]==0.27.0",
+    "python-multipart==0.0.6",
+    "sqlalchemy>=2.0.36",
+    "pymysql==1.1.0",
+    "alembic==1.13.1",
+    "minio==7.2.3",
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+    "python-dotenv==1.0.0",
+    "httpx==0.26.0",
+    "redis==5.0.1",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "email-validator==2.1.0",
+    "python-slugify==8.0.1",
+    "markdown==3.5.2",
+    "bleach==6.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==7.4.4",
+    "pytest-asyncio==0.23.3",
+    "pytest-cov==4.1.0",
+    "black==23.12.1",
+    "flake8==7.0.0",
+    "mypy==1.8.0",
+]
+performance = [
+    "hiredis==2.3.2",  # Redis 性能优化（需要 C++ 编译器）
+]
+
+[project.scripts]
+dev = "skill_hub.cli:dev"
+start = "skill_hub.cli:start"
+db-init = "skill_hub.cli:db_init"
+db-reset = "skill_hub.cli:db_reset"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

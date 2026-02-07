@@ -37,90 +37,200 @@ skill-hub/
 │   │   ├── schemas/        # Pydantic 模型
 │   │   ├── services/       # 业务逻辑
 │   │   └── utils/          # 工具函数
-│   ├── tests/              # 测试
-│   └── requirements.txt    # 依赖
-├── database/               # 数据库脚本
-│   ├── create_tables.sql
-│   └── migrations/
-├── docs/                   # 文档
-│   └── api/               # API 文档
+│   └── tests/              # 测试
+├── docs/                   # 📚 所有文档（安装、配置、故障排除等）
+│   ├── README.md           # 文档索引
+│   ├── 现在就开始.md        # 中文快速启动（推荐）
+│   ├── START_HERE.md       # 英文快速启动
+│   ├── 快速参考.md          # 命令速查表
+│   ├── TROUBLESHOOTING.md  # 故障排除
+│   └── ...                 # 其他文档
+├── scripts/                # 🔧 所有脚本（启动、安装、数据库等）
+│   ├── README.md           # 脚本说明
+│   ├── run_dev.cmd         # 一键启动（推荐）
+│   ├── setup.cmd           # 安装脚本
+│   └── ...                 # 其他脚本
 ├── docker/                 # Docker 配置
 │   ├── docker-compose.yml
 │   └── Dockerfile
-└── README.md
+├── skill_hub/              # CLI 工具
+│   └── cli.py              # uv run dev 等命令
+├── .env                    # 环境变量配置
+├── pyproject.toml          # UV 项目配置
+├── create_tables.sql       # 数据库表结构
+└── README.md               # 项目主文档（本文件）
 ```
 
 ## 快速开始
 
-### 1. 环境准备
+> 💡 **提示**: 所有文档已整理到 `docs/` 目录，所有脚本已整理到 `scripts/` 目录。
 
-```bash
-# 克隆项目
-git clone <repository-url>
-cd skill-hub
+### 🚀 最简单的方式（推荐）
 
-# 创建虚拟环境
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 安装依赖
-pip install -r backend/requirements.txt
+**方法 1: 使用一键启动脚本**
+```cmd
+scripts\run_dev.cmd
 ```
 
-### 2. 配置环境变量
+**方法 2: 使用 uv 命令**
+```bash
+# 确保在项目根目录
+cd E:\projects\AIs\skill-creator
+
+# 启动服务
+uv run dev
+```
+
+访问 http://localhost:8000/docs 查看 API 文档。
+
+**`uv run dev` 会自动：**
+- ✅ 复制 `.env` 文件到 `backend` 目录
+- ✅ 启动 MinIO 和 Redis（Docker）
+- ✅ 启动 FastAPI 开发服务器
+
+---
+
+### 📚 详细文档
+
+- **[现在就开始.md](docs/现在就开始.md)** - 中文快速启动指南（推荐新手）
+- **[快速参考.md](docs/快速参考.md)** - 一页纸命令速查表
+- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - 遇到问题时查看
+- **[docs/README.md](docs/README.md)** - 查看所有文档
+
+### 🔧 脚本工具
+
+- **[scripts/README.md](scripts/README.md)** - 查看所有可用脚本
+- **`scripts\run_dev.cmd`** - 一键启动开发服务器
+- **`scripts\setup.cmd`** - 首次安装设置
+- **`scripts\init_local_db.cmd`** - 初始化数据库
+
+---
+
+### 首次安装步骤
+
+```bash
+# 1. 创建虚拟环境并安装
+uv venv
+uv pip install -e .
+
+# 2. 配置环境变量
+copy .env.example .env
+# 编辑 .env，修改 MySQL 密码等配置
+
+# 3. 初始化数据库
+scripts\init_local_db.cmd
+# 或使用: uv run db-init
+
+# 4. 启动开发服务器
+scripts\run_dev.cmd
+# 或使用: uv run dev
+```
+
+就这么简单！
+
+#### 1. 环境准备
+
+**安装 uv（Python 包管理工具）**
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# 或使用 pip
+pip install uv
+```
+
+**创建虚拟环境**
+```bash
+# 使用 uv 创建虚拟环境（比 venv 快 10 倍）
+uv venv
+
+# 激活虚拟环境
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Windows (CMD)
+.venv\Scripts\activate.bat
+```
+
+**安装依赖**
+```bash
+# 使用 uv 安装依赖（比 pip 快 10-100 倍）
+uv pip install -e .
+
+# 或安装开发依赖
+uv pip install -e ".[dev]"
+
+# 或从 requirements.txt 安装
+uv pip install -r backend/requirements.txt
+```
+
+#### 2. 配置环境变量
 
 创建 `.env` 文件：
 
-```env
-# 数据库配置
-DATABASE_URL=mysql+pymysql://user:password@localhost:3306/skill_hub
+```bash
+# 复制模板
+copy .env.example .env
 
-# MinIO 配置
+# 编辑 .env 文件，填入实际配置
+```
+
+示例配置：
+```env
+DATABASE_URL=mysql+pymysql://root:root@localhost:3306/skill_hub
+
+# 本地 MinIO 配置
 MINIO_ENDPOINT=localhost:9000
 MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
-MINIO_SECURE=false
+MINIO_SECRET_KEY=minioadmin123
+MINIO_SECURE=False
+MINIO_USE_HTTPS=False
 
-# SSO 配置
-SSO_CLIENT_ID=your_client_id
-SSO_CLIENT_SECRET=your_client_secret
-SSO_AUTHORIZE_URL=https://sso.example.com/oauth/authorize
-SSO_TOKEN_URL=https://sso.example.com/oauth/token
-SSO_USERINFO_URL=https://sso.example.com/oauth/userinfo
+# MinIO 存储桶
+DEFAULT_FILE_BUCKET=skill-hub
+MINIO_BUCKET_NAME_SD=sd-generated-images
 
-# Redis 配置
-REDIS_URL=redis://localhost:6379/0
-
-# 应用配置
-SECRET_KEY=your-secret-key-here
-DEBUG=true
+SECRET_KEY=your-secret-key-change-in-production
 ```
 
-### 3. 初始化数据库
+**注意**: 项目使用本地 MinIO 服务（Docker）。
+
+#### 3. 初始化数据库
 
 ```bash
-# 创建数据库
-mysql -u root -p -e "CREATE DATABASE skill_hub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# 执行建表脚本
-mysql -u root -p skill_hub < database/create_tables.sql
-```
-
-### 4. 启动服务
-
-```bash
-# 使用 Docker Compose 启动所有服务
+# 启动 Docker 服务
 docker-compose up -d
 
-# 或手动启动后端服务
-cd backend
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# 等待服务启动（约 10-20 秒）
+
+# 初始化数据库
+# Windows (PowerShell)
+Get-Content create_tables.sql | docker exec -i skill-hub-mysql mysql -uroot -proot123 skill_hub
+
+# 或使用 MySQL 客户端
+mysql -h localhost -P 3306 -u skillhub -pskillhub123 skill_hub < create_tables.sql
 ```
 
-### 5. 访问服务
+#### 4. 启动服务
+
+```bash
+# 进入后端目录
+cd backend
+
+# 使用 uv 启动开发服务器
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### 5. 访问服务
 
 - API 文档: http://localhost:8000/docs
-- MinIO 控制台: http://localhost:9001
+- API 根路径: http://localhost:8000
+- MinIO 控制台: http://localhost:9001 (minioadmin / minioadmin123)
+
+**注意**: 
+- 本项目使用本地 MySQL 和本地 MinIO（Docker）
+- 默认存储桶: `skill-hub`
+- MinIO 数据存储在 Docker volume 中
 
 ## API 接口
 
@@ -196,6 +306,46 @@ bucket: project-name/
 
 ## 开发指南
 
+### 使用 uv 命令（推荐）
+
+```bash
+# 启动开发服务器
+uv run dev
+
+# 初始化数据库
+uv run db-init
+
+# 重置数据库
+uv run db-reset
+
+# 运行测试
+uv run pytest
+
+# 格式化代码
+uv run black backend/app
+```
+
+查看所有可用命令: [UV_COMMANDS.md](UV_COMMANDS.md)
+
+### 使用 uv 管理依赖
+
+```bash
+# 安装新包
+uv pip install package-name
+
+# 安装指定版本
+uv pip install package-name==1.0.0
+
+# 卸载包
+uv pip uninstall package-name
+
+# 列出已安装的包
+uv pip list
+
+# 更新 requirements.txt
+uv pip freeze > backend/requirements.txt
+```
+
 ### 添加新的 API 端点
 
 1. 在 `backend/app/api/v1/` 创建路由文件
@@ -216,14 +366,23 @@ alembic upgrade head
 ## 测试
 
 ```bash
+# 安装测试依赖
+uv pip install -e ".[dev]"
+
 # 运行所有测试
-pytest
+uv run pytest
 
 # 运行特定测试
-pytest tests/test_skills.py
+uv run pytest tests/test_skills.py
 
 # 生成覆盖率报告
-pytest --cov=app tests/
+uv run pytest --cov=app tests/
+
+# 代码格式化
+uv run black backend/app
+
+# 代码检查
+uv run flake8 backend/app
 ```
 
 ## 部署

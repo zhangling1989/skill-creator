@@ -19,7 +19,7 @@ httpx==0.26.0
 
 # Redis
 redis==5.0.1
-hiredis==2.3.2
+# hiredis==2.3.2  # 可选：需要 C++ 编译器，提升 Redis 性能
 
 # Validation
 pydantic==2.5.3

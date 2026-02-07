@@ -20,6 +20,11 @@ class Settings(BaseSettings):
     MINIO_ACCESS_KEY: str
     MINIO_SECRET_KEY: str
     MINIO_SECURE: bool = False
+    MINIO_USE_HTTPS: bool = False
+    
+    # MinIO 存储桶配置
+    DEFAULT_FILE_BUCKET: str = "10kv-psychology"
+    MINIO_BUCKET_NAME_SD: str = "sd-generated-images"
     
     # SSO 配置
     SSO_CLIENT_ID: str
@@ -50,5 +55,6 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"  # 忽略 .env 中的额外字段（如 DEBUG）
 
 settings = Settings()
